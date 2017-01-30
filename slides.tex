@@ -7,10 +7,43 @@
 
 \frame{\titlepage}
 
-\frame{\frametitle{Android}
+\frame{\frametitle{Android Software Stack}
   \begin{itemize}
-  \item More than a billion active devices
-  \item 1W on a device = 1GW on a billion devices
+  \item Android
+    \begin{itemize}
+    \item More than a billion active devices
+    \item 1 Watt/device \includegraphics[width=1cm]{1watt.jpg} $\rightarrow$ 1GW / billion devices \includegraphics[width=2cm]{1GWatt.jpg}
+    \end{itemize}
+  \item Android Open Source Project (AOSP)
+    \begin{itemize}
+    \item common base for all Android devices (+ customizations)
+    \item C/C++ for the libraries, Java for user interface
+    \end{itemize}
+  \end{itemize}
+}
+
+\frame{\frametitle{Plan}
+  \begin{itemize}
+  \item Performance analysis
+  \item Enable more secure execution environment (CFI)
+  \item Enable profile optimizations (AutoFDO)
+  \item Improve performance of AOSP libraries
+  \end{itemize}
+}
+
+\frame{\frametitle{Performance Analysis}
+  \begin{itemize}
+  \item linux perf: profile of cycles (per function, hot-spots)
+  \item valgrind: number of executed instructions (branches, R/W)
+  \item static profiles: how many times a function is called
+  \end{itemize}
+}
+
+\frame{\frametitle{Towards more secure devices}
+  \begin{itemize}
+  \item Control Flow Integrity (CFI): $2\%$ overhead \footnote{Enforcing Forward-Edge Control-Flow Integrity in GCC\&LLVM, USENIX'14}
+  \item to enable on Android: need to further reduce its cost
+  \item 
   \end{itemize}
 }
 
@@ -43,46 +76,25 @@
   \end{itemize}
 }
 
-\frame{\frametitle{}
+\frame{\frametitle{From Profiles to Power Usage}
   \begin{itemize}
   \item 
   \end{itemize}
 }
 
-\frame{\frametitle{}
+\frame{\frametitle{Improve performance of libraries}
   \begin{itemize}
-  \item 
+  \item comparative performance: std-benchmark\footnote{https://github.com/hiraditya/std-benchmark}
+  \item std-benchmark provides micro-benchmarks for each function in C/C++ standard libraries
+  \item detect room for improvement
+    \begin{itemize}
+    \item compile with different compilers
+    \item link with different standard libraries
+    \item run on different machines: CPUs, architectures
+    \end{itemize}
   \end{itemize}
 }
 
-\frame{\frametitle{}
-  \begin{itemize}
-  \item 
-  \end{itemize}
-}
 
-\frame{\frametitle{}
-  \begin{itemize}
-  \item 
-  \end{itemize}
-}
-
-\frame{\frametitle{}
-  \begin{itemize}
-  \item 
-  \end{itemize}
-}
-
-\frame{\frametitle{}
-  \begin{itemize}
-  \item 
-  \end{itemize}
-}
-
-\frame{\frametitle{}
-  \begin{itemize}
-  \item 
-  \end{itemize}
-}
 
 \end{document}
