@@ -7,18 +7,20 @@
 
 \frame{\titlepage}
 
-\frame{\frametitle{Android Software Stack}
+\frame{\frametitle{Why Optimizing the Android Software Stack?}
   \begin{itemize}
-  \item Android
-    \begin{itemize}
-    \item More than a billion active devices
-    \item 1 Watt/device \includegraphics[width=1cm]{1watt.jpg} $\rightarrow$ 1GW / billion devices \includegraphics[width=2cm]{1GWatt.jpg}
-    \end{itemize}
-  \item Android Open Source Project (AOSP)
-    \begin{itemize}
-    \item common base for all Android devices (+ customizations)
-    \item C/C++ for the libraries, Java for user interface
-    \end{itemize}
+  \item \includegraphics[width=8cm]{active-devices.png}
+  \item 1 Watt/device \includegraphics[width=1cm]{1watt.jpg} $\longrightarrow$ 1GW / billion devices \includegraphics[width=2cm]{1GWatt.jpg}
+  \end{itemize}
+}
+
+\frame{\frametitle{Android Open Source Project (AOSP) Software Stack}
+  \begin{itemize}
+  \item AOSP: common base for Android devices (+ customizations)
+  \item C/C++ for the platform libraries, Java for user interface
+  \item $\sim80\%$ execution cycles in C/C++, $\sim20\%$ in Java
+  \item release/updates/deprecation ($5\sim6$ years) \\
+    \includegraphics[width=8cm]{android-versions.png} \footnote{Data collected during a 7-day period ending on January 9, 2017.}
   \end{itemize}
 }
 
