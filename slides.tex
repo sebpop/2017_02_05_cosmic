@@ -16,26 +16,30 @@
 
 \frame{\frametitle{AutoFDO: Feedback Directed Optimization}
   \begin{itemize}
-  \item how it works
-  \item GWP (Google Wide Profiling)
-  \item better inlining
-  \item hot/cold code placement
+  \item linux-perf extracts profiles of running systems
+  \item little to no overhead \footnote{Google Wide Profiling: A Continuous Profiling Infrastructure for Data Centers, IEEE Micro (2010)}
+  \item compute basic block frequencies from profiles
+  \item better inlining \footnote{Lightweight Feedback-Directed Cross-Module Optimization, CGO 2010}
+  \item hot/cold code placement, register allocation, jump-threading
   \end{itemize}
 }
 
-\frame{\frametitle{Intel LBR}
+\frame{\frametitle{Intel-LBR: Last Branch Record}
   \begin{itemize}
-  \item Last Branch Record: last 16 taken branches
-  \item provides precise block execution frequency
-  \item edge probabilities
+  \item Intel-LBR: records last 16 taken branches
+  \item provides precise basic block execution frequency
   \item how do we do this on ARM?
   \end{itemize}
 }
 
-\frame{\frametitle{ETM: Embedded Trace Macrocell}
+\frame{\frametitle{ARM-ETM: Embedded Trace Macrocell}
   \begin{itemize}
-  \item Mathieu Poirier (Linaro) support in Linux kernel
-  \item 
+  \item ARM-ETM: records execution traces (for debug)
+  \item dedicated circular buffer 1 to 3Mb ($\sim10^5$ branches/Mb)
+  \item no overhead
+  \item support in Linux kernel by Mathieu Poirier (Linaro)
+  \item perf-inject translates execution traces to LBR events
+  \item next android kernel linux-4.9 has support for ETM
   \end{itemize}
 }
 
