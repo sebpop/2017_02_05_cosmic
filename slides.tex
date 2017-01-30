@@ -11,6 +11,7 @@
   \begin{itemize}
   \item \includegraphics[width=8cm]{active-devices.png}
   \item 1 Watt/device \includegraphics[width=1cm]{1watt.jpg} $\longrightarrow$ 1GW / billion devices \includegraphics[width=2cm]{1GWatt.jpg}
+  \item \$0.10/kWh = \$200M for 1 billion devices / year
   \end{itemize}
 }
 
@@ -43,7 +44,7 @@
 
 \frame{\frametitle{Towards more secure devices}
   \begin{itemize}
-  \item Control Flow Integrity (CFI): $2\%$ overhead \footnote{Enforcing Forward-Edge Control-Flow Integrity in GCC\&LLVM, USENIX'14}
+  \item Control Flow Integrity (CFI): $2\%$ overhead (\$4M) \footnote{Enforcing Forward-Edge Control-Flow Integrity in GCC\&LLVM, USENIX'14}
   \item to enable on Android: need to further reduce its cost
   \item 
   \end{itemize}
@@ -70,7 +71,7 @@
 \frame{\frametitle{ARM-ETM: Embedded Trace Macrocell}
   \begin{itemize}
   \item ARM-ETM: records execution traces (for debug)
-  \item dedicated circular buffer 1 to 3Mb ($\sim10^5$ branches/Mb)
+  \item dedicated circular buffer 1 to 3MB ($\sim10^5$ branches/MB)
   \item no overhead
   \item support in Linux kernel by Mathieu Poirier (Linaro)
   \item perf-inject translates execution traces to LBR events
@@ -80,7 +81,7 @@
 
 \frame{\frametitle{From Profiles to Power Usage}
   \begin{itemize}
-  \item 
+  \item  \footnote{An Analysis of Power Consumption in a Smartphone, USENIX'10}
   \end{itemize}
 }
 
