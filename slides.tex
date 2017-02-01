@@ -1,4 +1,5 @@
 \documentclass{beamer}
+\def \sarccontrib {{\bf SARC contribution}}
 \begin{document}
 \title{Optimizing the software stack of a cosmic proportions cluster of multi-core machines}
 \author{Sebastian Pop}
@@ -7,45 +8,83 @@
 
 \frame{\titlepage}
 
-\frame{\frametitle{Why Optimizing the Android Software Stack?}
+\frame{\frametitle{Android: a cosmic size cluster}
   \begin{itemize}
-  \item \includegraphics[width=8cm]{active-devices.png}
-  \item 1 Watt/device \includegraphics[width=1cm]{1watt.jpg} $\longrightarrow$ 1GW / billion devices \includegraphics[width=2cm]{1GWatt.jpg}
-  \item $\$0.30$ / device / year $\longrightarrow \$300M$ / billion devices / year \footnote{$\$0.12/kWh$, battery $13.2W = 4.4V * 3000 mAh$, charging every other day}
+  \item top500: $10M$ cores / $15.3MW$ \footnote{\url{https://www.top500.org/lists/2016/11}} / US$\$273$ million \footnote{\url{https://en.wikipedia.org/wiki/Sunway_TaihuLight}}
+  \item Android devices: $\sim{}6B$ cores \footnote{4 cores / device} / $\sim{}300MW$ \footnote{battery $13.2Wh = 4.4V * 3000 mAh$, charging every 48 hours} / $\sim{}$US\$0
+  \includegraphics[width=8cm]{active-devices.png}
   \end{itemize}
 }
 
 \frame{\frametitle{Android Open Source Project (AOSP) Software Stack}
   \begin{itemize}
-  \item AOSP: common base for Android devices (+ customizations)
-  \item C/C++ for the platform libraries, Java for user interface
-  \item $\sim80\%$ execution cycles in C/C++, $\sim20\%$ in Java
-  \item release/updates/deprecation ($5\sim6$ years) \\
+  \item<1-> AOSP: common base for Android devices (+ customizations)
+  \item<1-> C/C++ for the platform libraries, Java for user interface
+    {\small \begin{tabular}{c c c}
+      ansic & 22 MLoC & 39\% \\
+      cpp   & 13 MLoC & 23\% \\
+      java  & 10 MLoC & 17\% \\
+    \end{tabular}}
+  \item<1-> $\sim80\%$ execution cycles in C/C++, $\sim20\%$ in Java
+  \item<2-> release/updates/deprecation ($5\sim6$ years) \\
     \includegraphics[width=8cm]{android-versions.png} \footnote{Data collected during a 7-day period ending on January 9, 2017.}
   \end{itemize}
 }
 
-\frame{\frametitle{Plan}
+\frame{\frametitle{Why Optimizing the Performance of Android?}
+  \onslide<1-> {
+    \begin{itemize}
+    \item the code of Android is cold (flat profile), full of branches
+    \item there are few loops (image processing, compression, etc.)
+    \end{itemize}
+  }
+  \vspace{.3cm}
+  \onslide<2-> {
+    Overall picture:
+    \begin{itemize}
+    \item same code executed billions of time
+    \item outer loop is outside the device
+    \item profile how often code is in use
+    \item variation over time following popularity of apps
+    \item continuously monitor usage patterns
+    \item tune code optimziations over time
+    \end{itemize}
+    \vspace{.3cm}
+    \begin{tabular}{c c c}
+      $\$0.30$ / device / year & $\longrightarrow$ & $\$300M$ / billion devices / year \footnote{$\$0.12/kWh$, battery $13.2Wh = 4.4V * 3000 mAh$, charging every 48 hours} \\
+      \includegraphics[width=1.5cm]{1watt.jpg} & & \includegraphics[width=3cm]{1GWatt.jpg}
+    \end{tabular}
+  }
+}
+
+\frame{\frametitle{Agenda}
   \begin{itemize}
-  \item Performance analysis
-  \item Enable more secure execution environment (CFI)
-  \item Enable profile optimizations (AutoFDO)
+  \item Performance analysis: hot spots
   \item Improve performance of AOSP libraries
+  \item Enable continuous profiling and optimizations (AutoFDO)
+  \item Enable more secure execution environment (CFI)
   \end{itemize}
 }
 
 \frame{\frametitle{Performance Analysis}
   \begin{itemize}
+  \item benchmarks: track performance over time (compiler/libraries)
   \item linux perf: profile of cycles (per function, hot-spots)
   \item valgrind: number of executed instructions (branches, R/W)
-  \item static profiles: how many times a function is called
+  \item static profiles: how many uses for a function
   \end{itemize}
 }
 
-\frame{\frametitle{Towards more secure devices}
+\frame{\frametitle{Improve performance of libraries}
   \begin{itemize}
-  \item Control Flow Integrity (CFI): $2\%$ overhead \footnote{Enforcing Forward-Edge Control-Flow Integrity in GCC\&LLVM, USENIX'14}
-  \item to enable on Android: need to further reduce its cost
+  \item \sarccontrib{}: std-benchmark\footnote{https://github.com/hiraditya/std-benchmark}
+  \item std-benchmark provides micro-benchmarks for each function in C/C++ standard libraries
+  \item detect room for improvement
+    \begin{itemize}
+    \item compile with different compilers
+    \item link with different standard libraries
+    \item run on different machines: CPUs, architectures
+    \end{itemize}
   \item 
   \end{itemize}
 }
@@ -57,12 +96,7 @@
   \item compute basic block frequencies from profiles
   \item better inlining \footnote{Lightweight Feedback-Directed Cross-Module Optimization, CGO 2010}
   \item hot/cold code placement, register allocation, jump-threading
-  \end{itemize}
-}
-
-\frame{\frametitle{Intel-LBR: Last Branch Record}
-  \begin{itemize}
-  \item Intel-LBR: records last 16 taken branches
+  \item Intel-LBR (last branch record): last 16 taken branches
   \item provides precise basic block execution frequency
   \item how do we do this on ARM?
   \end{itemize}
@@ -70,12 +104,16 @@
 
 \frame{\frametitle{ARM-ETM: Embedded Trace Macrocell}
   \begin{itemize}
+  \item \sarccontrib{:} how to use ARM-ETM for AutoFDO
+    \begin{itemize}
+    \item perf-inject translates execution traces to LBR events
+    \item patch similar to perf-inject for Intel Process Trace
+    \end{itemize}
   \item ARM-ETM: records execution traces (for debug)
   \item dedicated circular buffer 1 to 3MB ($\sim10^5$ branches/MB)
   \item no overhead
   \item support in Linux kernel by Mathieu Poirier (Linaro)
-  \item perf-inject translates execution traces to LBR events
-  \item next android kernel linux-4.9 has support for ETM
+  \item next android kernel linux-4.9 will support ARM-ETM
   \end{itemize}
 }
 
@@ -85,19 +123,11 @@
   \end{itemize}
 }
 
-\frame{\frametitle{Improve performance of libraries}
+\frame{\frametitle{Towards more secure devices}
   \begin{itemize}
-  \item comparative performance: std-benchmark\footnote{https://github.com/hiraditya/std-benchmark}
-  \item std-benchmark provides micro-benchmarks for each function in C/C++ standard libraries
-  \item detect room for improvement
-    \begin{itemize}
-    \item compile with different compilers
-    \item link with different standard libraries
-    \item run on different machines: CPUs, architectures
-    \end{itemize}
+  \item Control Flow Integrity (CFI): $2\%$ overhead \footnote{Enforcing Forward-Edge Control-Flow Integrity in GCC\&LLVM, USENIX'14}
+  \item to enable on Android: need to further reduce its cost
   \end{itemize}
 }
-
-
 
 \end{document}
