@@ -75,6 +75,23 @@
   \end{itemize}
 }
 
+\frame{\frametitle{Benchmarks}
+  track performance over time (compiler/libraries) \\
+  \includegraphics[width=11cm]{benchmarks.png}  
+}
+
+\frame{\frametitle{Linux Perf}
+  
+}
+
+\frame{\frametitle{Valgrind}
+  
+}
+
+\frame{\frametitle{Static Profile}
+  
+}
+
 \frame{\frametitle{Improve performance of libraries}
   \begin{itemize}
   \item \sarccontrib{}: std-benchmark\footnote{https://github.com/hiraditya/std-benchmark}
@@ -104,16 +121,16 @@
 
 \frame{\frametitle{ARM-ETM: Embedded Trace Macrocell}
   \begin{itemize}
-  \item \sarccontrib{:} how to use ARM-ETM for AutoFDO
-    \begin{itemize}
-    \item perf-inject translates execution traces to LBR events
-    \item patch similar to perf-inject for Intel Process Trace
-    \end{itemize}
   \item ARM-ETM: records execution traces (for debug)
   \item dedicated circular buffer 1 to 3MB ($\sim10^5$ branches/MB)
   \item no overhead
   \item support in Linux kernel by Mathieu Poirier (Linaro)
   \item next android kernel linux-4.9 will support ARM-ETM
+  \item \sarccontrib{:} how to use ARM-ETM for AutoFDO
+    \begin{itemize}
+    \item perf-inject translates execution traces to LBR events
+    \item patch similar to perf-inject for Intel Process Trace
+    \end{itemize}
   \end{itemize}
 }
 
