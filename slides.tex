@@ -97,7 +97,7 @@
     \begin{itemize}
     \item cache and branch simulator
     \item count read, write, and branch instructions
-    \item \sarccontrib{:} diff tool for cachegrind profiles
+    \item \sarccontrib{:} diff tool for cachegrind profiles \footnote{\url{https://github.com/bmrzycki/cg_difftext}}
     \end{itemize}
   \item {\ttfamily valgrind --tool=callgrind}
     \begin{itemize}
@@ -197,7 +197,11 @@ $ cg_difftext.py cachegrind.out.gcc cachegrind.out.llvm
 \end{frame}
 
 \frame{\frametitle{Performance Analysis with Linux Perf}
-
+  Two modes of operation:
+  \begin{itemize}
+  \item sum up all counters: {\ttfamily perf stat}
+  \item record events: {\ttfamily perf record}
+  \end{itemize}
 }
 
 \begin{frame}[fragile]{Linux Perf: Example -- SQLite}
@@ -321,7 +325,8 @@ $ cg_difftext.py cachegrind.out.gcc cachegrind.out.llvm
 \frame{\frametitle{From Dynamic Profiles to Power Usage}
   \begin{itemize}
   \item traditionally, per app battery usage (ammeter on wire) \footnote{An Analysis of Power Consumption in a Smartphone, USENIX'10}
-  \item more accurate picture with Linux-perf profiles:
+    \vspace{1cm}
+  \item Linux-perf profiles provide a more accurate picture
     \begin{itemize}
     \item profiles from the field: real world use-cases
     \item merge together different profiles
