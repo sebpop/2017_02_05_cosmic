@@ -63,7 +63,7 @@
   \item Performance analysis: hot spots
   \item Improve performance of AOSP libraries
   \item Enable continuous profiling and optimizations (AutoFDO)
-  \item Enable more secure execution environment (CFI)
+  \item Enable more secure execution environments (CFI)
   \end{itemize}
 }
 
@@ -95,22 +95,26 @@
 }
 
 \frame{\frametitle{Static Profile}
-  
+  \begin{itemize}
+  \item -flto: static call-graph, estimated frequencies per call
+  \end{itemize}
 }
 
 \frame{\frametitle{Improve performance of AOSP libraries}
   \sarccontrib{\bf s}
   \begin{itemize}
   \item update Android NDK libc++, make it easy to keep updated
-  \item improve perf of std::string.find() in libc++, libstdc++
+  \item 20x speedup of std::string.find() in libc++ and libstdc++
+    need to port perf to memmem and strstr of bionic and glibc
   \item improve perf of shared\_ptr in libc++
   \item improve perf of string to int value parsing in libc++
   \end{itemize}
 }
 
 \frame{\frametitle{Benchmarking Standard Libraries}
+  \sarccontrib{}: std-benchmark\footnote{https://github.com/hiraditya/std-benchmark}
+  \vspace{1cm}
   \begin{itemize}
-  \item \sarccontrib{}: std-benchmark\footnote{https://github.com/hiraditya/std-benchmark}
   \item std-benchmark provides micro-benchmarks for functions in libc and C++ standard library
   \item detect room for improvement
     \begin{itemize}
@@ -127,7 +131,7 @@
   \item little to no overhead \footnote{Google Wide Profiling: A Continuous Profiling Infrastructure for Data Centers, IEEE Micro (2010)}
   \item coverage (basic block frequencies) from dynamic profiles
   \item continuous profiling and tuning of optimizations
-    \includegraphics[width=5cm]{continuous-autofdo.eps}    
+    \includegraphics[width=5cm]{continuous-autofdo.eps}
   \end{itemize}
 }
 
@@ -171,9 +175,16 @@
   \includegraphics[width=10cm]{autofdo-etm.eps}
 }
 
-\frame{\frametitle{From Profiles to Power Usage}
+\frame{\frametitle{From Dynamic Profiles to Power Usage}
   \begin{itemize}
-  \item  \footnote{An Analysis of Power Consumption in a Smartphone, USENIX'10}
+  \item traditionally, per app battery usage (ammeter on wire) \footnote{An Analysis of Power Consumption in a Smartphone, USENIX'10}
+  \item more accurate picture with linux-perf profiles:
+    \begin{itemize}
+    \item profiles from the field: real world use-cases
+    \item merge together different profiles
+    \item compute code execution frequency
+    \item power consumption estimation per line of code
+    \end{itemize}
   \end{itemize}
 }
 
