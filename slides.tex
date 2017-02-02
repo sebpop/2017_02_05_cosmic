@@ -33,6 +33,7 @@
 
 \frame{\frametitle{Why Optimizing the Performance of Android?}
   \onslide<1-> {
+    Why bothering?
     \begin{itemize}
     \item the code of Android is cold (flat profile), full of branches
     \item there are few loops (image processing, compression, etc.)
@@ -40,7 +41,7 @@
   }
   \vspace{.3cm}
   \onslide<2-> {
-    Overall picture:
+    Motivation:
     \begin{itemize}
     \item same code executed billions of time
     \item outer loop is outside the device
@@ -76,13 +77,13 @@
 }
 
 \frame{\frametitle{Benchmarks}
-  track performance over time (compiler/libraries) \\
+  track performance (compiler/libraries) over time \\
   \includegraphics[width=11cm]{benchmarks.png}  
 }
 
 \frame{\frametitle{Benchmarks}
   on a real device (and a noisy benchmark...)
-  \includegraphics[width=11cm]{benchmarks-device.png}  
+  \includegraphics[width=11cm]{benchmarks-device.png}
 }
 
 \frame{\frametitle{Linux Perf}
@@ -97,17 +98,26 @@
   
 }
 
-\frame{\frametitle{Improve performance of libraries}
+\frame{\frametitle{Improve performance of AOSP libraries}
+  \sarccontrib{\bf s}
+  \begin{itemize}
+  \item update Android NDK libc++, make it easy to keep updated
+  \item improve perf of std::string.find() in libc++, libstdc++
+  \item improve perf of shared\_ptr in libc++
+  \item improve perf of string to int value parsing in libc++
+  \end{itemize}
+}
+
+\frame{\frametitle{Benchmarking Standard Libraries}
   \begin{itemize}
   \item \sarccontrib{}: std-benchmark\footnote{https://github.com/hiraditya/std-benchmark}
-  \item std-benchmark provides micro-benchmarks for each function in C/C++ standard libraries
+  \item std-benchmark provides micro-benchmarks for functions in libc and C++ standard library
   \item detect room for improvement
     \begin{itemize}
     \item compile with different compilers
     \item link with different standard libraries
     \item run on different machines: CPUs, architectures
     \end{itemize}
-  \item 
   \end{itemize}
 }
 
@@ -115,11 +125,28 @@
   \begin{itemize}
   \item linux-perf extracts profiles of running systems
   \item little to no overhead \footnote{Google Wide Profiling: A Continuous Profiling Infrastructure for Data Centers, IEEE Micro (2010)}
-  \item compute basic block frequencies from profiles
-  \item better inlining \footnote{Lightweight Feedback-Directed Cross-Module Optimization, CGO 2010}
-  \item hot/cold code placement, register allocation, jump-threading
-  \item Intel-LBR (last branch record): last 16 taken branches
-  \item provides precise basic block execution frequency
+  \item coverage (basic block frequencies) from dynamic profiles
+  \item continuous profiling and tuning of optimizations
+    \includegraphics[width=5cm]{continuous-autofdo.eps}    
+  \end{itemize}
+}
+
+\frame{\frametitle{AutoFDO: Example}
+  \includegraphics[width=11cm]{autofdo.eps}
+}
+
+\frame{\frametitle{AutoFDO: Code Optimizations}
+  \begin{itemize}
+  \item better inlining \footnote{Lightweight Feedback-Directed Cross-Module Optimization, CGO 2010}, devirtualization, function instantiation
+  \item hot/cold code placement
+  \item register allocation, jump-threading, etc.
+  \end{itemize}
+}
+
+\frame{\frametitle{AutoFDO: More Precise Coverage}
+  \begin{itemize}
+  \item Intel-LBR (Last Branch Record): last 16 taken branches
+  \item provides more precise basic block execution frequency
   \item how do we do this on ARM?
   \end{itemize}
 }
@@ -131,12 +158,17 @@
   \item no overhead
   \item support in Linux kernel by Mathieu Poirier (Linaro)
   \item next android kernel linux-4.9 will support ARM-ETM
+    \vspace{1cm}
   \item \sarccontrib{:} how to use ARM-ETM for AutoFDO
     \begin{itemize}
     \item perf-inject translates execution traces to LBR events
     \item patch similar to perf-inject for Intel Process Trace
     \end{itemize}
   \end{itemize}
+}
+
+\frame{\frametitle{AutoFDO: with ARM-ETM}
+  \includegraphics[width=10cm]{autofdo-etm.eps}
 }
 
 \frame{\frametitle{From Profiles to Power Usage}
