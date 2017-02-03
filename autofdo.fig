@@ -44,3 +44,5 @@ Single
 4 0 0 50 -1 0 12 0.0000 4 195 1830 3600 1350 perf record ./sort.exe\001
 4 0 0 50 -1 0 12 0.0000 4 195 5730 3600 2340 create_gcov --binary=sort.exe --profile=perf.data --gcov=sort.gcov\001
 4 0 0 50 -1 0 12 0.0000 4 195 4950 3645 3375 gcc -O3 -fauto-profile=sort.gcov sort.c -o sort-autofdo.exe\001
+4 0 1 50 -1 0 12 0.0000 4 150 720 4455 900 2254 ms\001
+4 0 1 50 -1 0 12 0.0000 4 150 720 5040 3960 2155 ms\001
