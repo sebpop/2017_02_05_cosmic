@@ -231,6 +231,53 @@ $ cg_difftext.py cachegrind.out.gcc cachegrind.out.llvm
   \resizebox{0.5\textwidth}{!}{\usebox\myv}
 \end{frame}
 
+\begin{frame}[fragile]{Linux Perf: Example -- 483.xalancbmk}
+  \begin{lrbox}{\myv}
+    \begin{minipage}{\textwidth}
+\begin{verbatim}
+$ perf record ./xalancbmk
+$ perf report
+  0.20 │629a84:   ldr    w9, [x0,#24]
+ 18.71 │629a88:   ldr    w8, [x1,#24]
+ 12.93 │629a8c:   cmp    w9, w8
+  2.74 │629a90:   b.ne   629af8 <xalanc_1_8::XalanDOMString::equals
+  2.00 │629a94:   ldp    x8, x10, [x0]
+  2.43 │629a98:   cmp    x8, x10
+  1.80 │629a9c:   ldp    x10, x12, [x1]
+  1.03 │629aa0:   adrp   x11, 704000 <vtable for xalanc_1_8::ReusableArenaBlock+0x8>
+  0.53 │629aa4:   add    x11, x11, #0xb08
+  0.03 │629aa8:   csel   x8, x11, x8, eq
+  1.33 │629aac:   cmp    x10, x12
+  0.34 │629ab0:   csel   x10, x11, x10, eq
+  1.78 │629ab4:   cbz    w9, 629b00 <xalanc_1_8::XalanDOMString::equals
+  0.02 │629ab8:   ldrh   w11, [x8]
+  4.02 │629abc:   ldrh   w12, [x10]
+  3.75 │629ac0:   cmp    w11, w12
+  1.03 │629ac4:   b.ne   629b08 <xalanc_1_8::XalanDOMString::equals
+  1.16 │629ac8:   lsl    x9, x9, #1
+       │629acc:   add    x8, x8, #0x2
+       │629ad0:   add    x10, x10, #0x2
+       │629ad4:   sub    x9, x9, #0x2
+ 10.18 │629ad8:   cbz    x9, 629b00 <xalanc_1_8::XalanDOMString::equals
+  0.01 │629adc:   ldrh   w11, [x8],#2
+ 18.79 │629ae0:   sub    x9, x9, #0x2
+  0.00 │629ae4:   ldrh   w12, [x10],#2
+  9.22 │629ae8:   cmp    w11, w12
+  5.11 │629aec:   b.eq   629ad8 <xalanc_1_8::XalanDOMString::equals
+       │629af0:   mov    w0, wzr
+       │629af4:   ret
+  0.69 │629af8:   mov    w0, wzr
+  0.09 │629afc:   ret
+       │629b00:   orr    w0, wzr, #0x1
+  0.10 │629b04:   ret
+       │629b08:   mov    w0, wzr
+       │629b0c:   ret
+\end{verbatim}
+    \end{minipage}
+  \end{lrbox}
+  \resizebox{0.5\textwidth}{!}{\usebox\myv}
+\end{frame}
+
 \frame{\frametitle{Static Profiles}
   \begin{itemize}
   \item information known at compile time
