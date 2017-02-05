@@ -28,7 +28,7 @@
       cpp   & 13 MLoC & 23\% \\
       java  & 10 MLoC & 17\% \\
     \end{tabular}}
-  \item<1-> $\sim80\%$ execution cycles in C/C++, $\sim20\%$ in Java
+  \item<1-> $\sim80\%$ execution cycles in C/C++, $\sim20\%$ in Java \footnote{Linux-perf profile of my own usage of an Android device.}
   \item<2-> release/updates/deprecation ($5\sim6$ years) \\
     \includegraphics[width=8cm]{android-versions.png} \footnote{Data collected during a 7-day period ending on January 9, 2017.}
   \end{itemize}
@@ -360,17 +360,20 @@ $ clang sort.c -c -O3 -mllvm -stats
 \frame{\frametitle{Improve Performance of AOSP Libraries}
   \sarccontrib{\bf s}
   \begin{itemize}
-  \item update Android NDK libc++, make it easy to keep updated
-  \item 12x speedup of std::string.find() in libc++ and libstdc++
-    need to port perf to memmem and strstr of bionic and glibc
-  \item improve perf of shared\_ptr in libc++
-  \item improve perf of string to int value parsing in libc++
   \item compiler contributions:
     \begin{itemize}
     \item jump-threading: optimize finite state machines
     \item gvn-hoisting: better scheduling, code size
     \item loop rotation: to improve LICM and PRE
     \item switch to jump-tables
+    \end{itemize}
+  \item libcxx contributions:
+    \begin{itemize}
+    \item update Android NDK libc++, make it easy to keep updated
+    \item 12x speedup of std::string.find() in libc++ and libstdc++
+      need to port perf to memmem and strstr of bionic and glibc
+    \item improve perf of shared\_ptr
+    \item improve perf of string to int value parsing
     \end{itemize}
   \end{itemize}
 }
@@ -448,7 +451,7 @@ $ clang sort.c -c -O3 -mllvm -stats
     \item profiles from the field: real world use-cases
     \item merge together different profiles
     \item compute code execution frequency
-    \item power consumption estimation per line of code
+    \item power consumption estimation per line of code \footnote{Google Wide Profiling: A Continuous Profiling Infrastructure for Data Centers, IEEE Micro (2010)}
     \end{itemize}
   \end{itemize}
 }
@@ -457,6 +460,22 @@ $ clang sort.c -c -O3 -mllvm -stats
   \begin{itemize}
   \item Control Flow Integrity (CFI): $2\%$ overhead \footnote{Enforcing Forward-Edge Control-Flow Integrity in GCC\&LLVM, USENIX'14}
   \item to enable on Android: need to further reduce its cost
+  \end{itemize}
+}
+
+\frame{\frametitle{Takeaways}
+  \begin{itemize}
+  \item outer loop is parallel $\rightarrow$ optimize the inner-most loop
+  \item scalar optimizations to improve performance of AOSP
+    \vspace{1cm}
+  \item AutoFDO on ARM is enabled with ETM debug facility
+  \item Linux-perf transforms live systems into benchmarks
+    \begin{itemize}
+    \item fine grain computation of power consumption
+    \item prioritization of performance tuning work
+    \end{itemize}
+    \vspace{1cm}
+  \item Samsung phones are a galaxy in the Android cosmos
   \end{itemize}
 }
 
