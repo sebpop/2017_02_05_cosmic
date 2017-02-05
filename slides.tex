@@ -47,11 +47,14 @@
     Motivation:
     \begin{itemize}
     \item same code executed billions of time
-    \item outer loop is outside the device
-    \item profile how often code is in use
-    \item variation over time following popularity of apps
-    \item continuously monitor usage patterns
-    \item tune code optimization over time
+    \item outer loop is outside the device $\rightarrow$
+      \begin{itemize}
+      \item improve innermost scalar code
+      \item profile how often code is in use
+      \item variation over time following popularity of apps
+      \item continuously monitor usage patterns
+      \item tune code optimization over time
+      \end{itemize}
     \end{itemize}
     \vspace{.3cm}
     \begin{tabular}{c c c}
@@ -294,14 +297,81 @@ $ perf report
   \end{itemize}
 }
 
+\begin{frame}[fragile]{Static Profiles: Example}
+  \begin{lrbox}{\myv}
+    \begin{minipage}{\textwidth}
+\begin{verbatim}
+$ clang sort.c -c -O3 -mllvm -stats
+===-------------------------------------------------------------------------===
+                          ... Statistics Collected ...
+===-------------------------------------------------------------------------===
+
+   158 asm-printer      - Number of machine instrs printed
+   176 basicaa          - Number of times a GEP is decomposed
+     2 branchfolding    - Number of dead blocks removed
+     1 branchfolding    - Number of block tails merged
+     3 build-libcalls   - Number of arguments inferred as nocapture
+     1 build-libcalls   - Number of functions inferred as nounwind
+     1 build-libcalls   - Number of arguments inferred as readonly
+     1 cgscc-passmgr    - Maximum CGSCCPassMgr iterations on one SCC
+     5 codegen-dce      - Number of dead instructions deleted
+     3 codegenprepare   - Number of blocks eliminated
+    14 codegenprepare   - Number of uses of Cast expressions replaced with uses of sunken Casts
+     2 codegenprepare   - Number of uses of Cmp expressions replaced with uses of sunken Cmps
+     3 codegenprepare   - Number of GEPs converted to casts
+     7 codegenprepare   - Number of memory instructions whose address computations were sunk
+    60 dagcombine       - Number of dag nodes combined
+    12 early-cse        - Number of instructions CSE'd
+     2 early-cse        - Number of load instructions CSE'd
+     1 functionattrs    - Number of arguments marked nocapture
+     1 functionattrs    - Number of functions marked as norecurse
+     2 globalopt        - Number of functions converted to fastcc
+     8 globalopt        - Number of globals marked unnamed_addr
+     2 globalsmodref-aa - Number of functions without address taken
+     1 gvn              - Number of blocks merged
+     4 gvn              - Number of instructions deleted
+     3 gvn              - Number of instructions simplified
+     1 gvn              - Number of loads PRE'd
+     3 indvars          - Number of IV sign/zero extends eliminated
+     2 indvars          - Number of loop exit tests replaced
+     2 indvars          - Number of indvars widened
+     2 inline           - Number of functions deleted because all callers found
+     4 inline           - Number of functions inlined
+     4 inline-cost      - Number of call sites analyzed
+    42 instcombine      - Number of insts combined
+     3 instcombine      - Number of constant folds
+     4 instcombine      - Number of dead inst eliminated
+     3 instcombine      - Number of reassociations
+     2 instcombine      - Number of instructions sunk
+     3 instsimplify     - Number of reassociations
+     3 instsimplify     - Number of redundant instructions removed
+    38 isel             - Number of blocks selected using DAG
+  1128 isel             - Number of times dag isel has to try another path
+     3 isel             - Number of entry blocks encountered
+    18 lcssa            - Number of live out of a loop variables
+     7 licm             - Number of instructions hoisted out of loop
+\end{verbatim}
+    \end{minipage}
+  \end{lrbox}
+  \resizebox{0.5\textwidth}{!}{\usebox\myv}
+\end{frame}
+
+
 \frame{\frametitle{Improve Performance of AOSP Libraries}
   \sarccontrib{\bf s}
   \begin{itemize}
   \item update Android NDK libc++, make it easy to keep updated
-  \item 20x speedup of std::string.find() in libc++ and libstdc++
+  \item 12x speedup of std::string.find() in libc++ and libstdc++
     need to port perf to memmem and strstr of bionic and glibc
   \item improve perf of shared\_ptr in libc++
   \item improve perf of string to int value parsing in libc++
+  \item compiler contributions:
+    \begin{itemize}
+    \item jump-threading: optimize finite state machines
+    \item gvn-hoisting: better scheduling, code size
+    \item loop rotation: to improve LICM and PRE
+    \item switch to jump-tables
+    \end{itemize}
   \end{itemize}
 }
 
